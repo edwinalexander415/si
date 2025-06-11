@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canelo Álvarez vs Edgar Berlanga - Venta de Entradas</title>
+  <link rel="stylesheet" href="c.css">
+</head>
+<body>
+  <header>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdUXvg1QoYdKwWTBfUChNKTsiCKo0hKTpJBQ&s" alt="Logo Canelo">
+    <nav>
+      <a href="#inicio">Precio</a>
+      <a href="#eventos">Pelea</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Canelo Álvarez vs Edgar Berlanga<br>¡Compra tus entradas ahora!</h1>
+  </section>
+
+  <section class="section-imagenes">
+   <center>
+    <img src="h.jpg" alt="" width="700">
+   </center>
+    
+  </section>
+
+  <section id="inicio" class="tabla">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <th>Zona</th>
+        <th>Precio</th>
+        <th>Disponibilidad</th>
+        <th>Acción</th>
+      </tr>
+      <tr>
+        <td>Ringside</td>
+        <td>$1000</td>
+        <td>Disponible</td>
+        <td><button onclick="comprar('Ringside', 1000)">Comprar</button></td>
+      </tr>
+      <tr>
+        <td>VIP</td>
+        <td>$600</td>
+        <td>Pocas entradas</td>
+        <td><button onclick="comprar('VIP', 600)">Comprar</button></td>
+      </tr>
+      <tr>
+        <td>General</td>
+        <td>$250</td>
+        <td>Disponible</td>
+        <td><button onclick="comprar('General', 250)">Comprar</button></td>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </section>
+
+  <section id="eventos">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+   <center>
+      <tr>
+         
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKqsXhj3vioS6DC56Fu9q7Cw3oaMot7G1xSg&s" alt="Video Promo" height="300 " width="400">
+
+      <a href="https://youtu.be/aNd9d-5aiqs" target="_blank">Video promocional</a> 
+      
+    </div>
+    
+      <tr>
+  
+   
+      <img src="team.png" alt="Página Oficial" height="300 " width="400">
+      
+      <a href="https://www.caneloteam.com/" target="_blank">Sitio Oficial Canelo</a>
+    </div>
+      </tr>
+    <tr>
+
+      <img src="ber.jfif" height="300 " width="400">
+
+      <a href="https://en.wikipedia.org/wiki/Edgar_Berlanga" target="_blank">Biografía Edgar Berlanga</a>
+    </div>
+    <audio src="canelo.mp3" controls></audio>
+    </tr>
+    </center>
+<audio id="audio" src="audiooo.mp3" preload="auto" loop="true"></audio>
+
+ <script src="audio.js">
+
+ </script>
+    <center>
+      
+    <img src="https://media.tenor.com/I-p3xDMj_EwAAAA1/consciouspilotboxing-canelo.webp" alt="" height="400" width="400">
+   
+    <p>LA TENSION EN ESTE COMBATE ESTA POR TODO LO ALTO </p>
+    <P>los gladiadores se preparan para una batalla impresionante</P>
+    <P>!NO TE LO PIERDAS¡</P>
+    </center>
+   
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </section>
+
+  <section id="contacto" class="contacto">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+   
+    
+    <h2>Registro</h2>
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="email" id="email" placeholder="Correo Electrónico" required>
+    <button onclick="registrar()">Registrar</button>
+    <br>
+     lugar:T-MOBILE ARENA,LAS VEGAS <br>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRZTxF3wfXKNKUqnaza3qIko9WS8rFz_80ow&s" height="100" width="220"> <br>
+    hora local:21:00 <br>
+    hora Mexico:23:00 <br>
+    <a href="https://www.t-mobilearena.com/" target="_blank"> !CLICK AQUI¡ para ir al Sitio Oficial</a> <br>
+    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </section>
+
+
+
+  <footer style="text-align:center; padding: 10px; background-color: #eee;">
+    &copy; 2025 Venta de Entradas - Canelo vs Berlanga. Todos los derechos reservados a Edwin Alexander Avila Flores
+  </footer>
+
+  <script>
+    function comprar(zona, precio) {
+      alert(`Has comprado una entrada en la zona ${zona} por $${precio}.`);
+    }
+
+    function registrar() {
+      const nombre = document.getElementById('nombre').value;
+      const email = document.getElementById('email').value;
+      if (nombre && email) {
+        alert(`Registro exitoso para ${nombre} con el correo ${email}.`);
+        document.getElementById('nombre').value = '';
+        document.getElementById('email').value = '';
+      } else {
+        alert('Por favor, completa todos los campos.');
+      }
+    }
+    
+  </script>
+ 
+</body>
+</html>
