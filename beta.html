@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titanium Fitness</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-color: #050505;
+--text-color: #ffffff;
+--accent-color: #ff2a3f;
+--accent-glow: rgba(255, 42, 63, 0.5);
+--section-bg: #0d0d0d;
+--card-bg: #151515;
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+cursor: none;
+}
+body {
+font-family: 'Montserrat', sans-serif;
+background-color: var(--bg-color);
+color: var(--text-color);
+overflow-x: hidden;
+}
+::selection {
+background-color: var(--accent-color);
+color: #fff;
+}
+.cursor-dot, .cursor-outline {
+position: fixed;
+top: 0;
+left: 0;
+transform: translate(-50%, -50%);
+border-radius: 50%;
+z-index: 9999;
+pointer-events: none;
+}
+.cursor-dot {
+width: 8px;
+height: 8px;
+background-color: var(--accent-color);
+transition: width 0.2s, height 0.2s;
+}
+.cursor-outline {
+width: 40px;
+height: 40px;
+border: 1px solid var(--accent-glow);
+transition: width 0.2s, height 0.2s, transform 0.1s ease-out;
+}
+.transition-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background: var(--accent-color);
+z-index: 99999;
+transform: scaleY(0);
+transform-origin: top;
+transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+pointer-events: none;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.transition-overlay.active-in {
+transform: scaleY(1);
+transform-origin: top;
+}
+.transition-overlay.active-out {
+transform: scaleY(0);
+transform-origin: bottom;
+}
+.transition-text {
+font-size: 5rem;
+font-weight: 900;
+color: #fff;
+text-transform: uppercase;
+letter-spacing: 10px;
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.3s, transform 0.3s;
+}
+.transition-overlay.active-in .transition-text {
+opacity: 1;
+transform: translateY(0);
+transition-delay: 0.3s;
+}
+a {
+text-decoration: none;
+color: inherit;
+}
+header {
+position: fixed;
+top: 0;
+width: 100%;
+padding: 25px 50px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+z-index: 1000;
+background: transparent;
+transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background 0.4s, padding 0.4s;
+}
+.logo {
+font-size: 2.2rem;
+font-weight: 900;
+text-transform: uppercase;
+letter-spacing: 3px;
+color: #fff;
+position: relative;
+}
+.logo span {
+color: var(--accent-color);
+text-shadow: 0 0 15px var(--accent-glow);
+}
+.nav-links {
+display: flex;
+gap: 40px;
+}
+.nav-links a {
+font-weight: 600;
+text-transform: uppercase;
+font-size: 0.9rem;
+letter-spacing: 2px;
+position: relative;
+padding: 5px 0;
+overflow: hidden;
+display: inline-block;
+}
+.nav-links a span {
+position: relative;
+display: inline-block;
+transition: transform 0.3s;
+}
+.nav-links a::before {
+content: attr(data-text);
+position: absolute;
+top: 100%;
+left: 0;
+color: var(--accent-color);
+transition: transform 0.3s;
+}
+.nav-links a:hover span {
+transform: translateY(-100%);
+}
+.nav-links a:hover::before {
+transform: translateY(-100%);
+}
+.hero {
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+position: relative;
+overflow: hidden;
+}
+.hero-bg {
+position: absolute;
+top: -10%;
+left: -10%;
+width: 120%;
+height: 120%;
+background: linear-gradient(to right, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0.4) 50%, rgba(5,5,5,0.9) 100%), url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1920&auto=format&fit=crop') center/cover;
+z-index: -1;
+transition: transform 0.1s ease-out;
+}
+.hero-content {
+text-align: center;
+max-width: 900px;
+padding: 0 20px;
+z-index: 1;
+}
+.hero-content h1 {
+font-size: 6vw;
+font-weight: 900;
+text-transform: uppercase;
+line-height: 1;
+margin-bottom: 20px;
+clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+animation: revealUp 1s cubic-bezier(0.77, 0, 0.175, 1) 0.5s forwards;
+}
+.hero-content h1 span {
+color: transparent;
+-webkit-text-stroke: 2px var(--accent-color);
+}
+.hero-content p {
+font-size: 1.2rem;
+font-weight: 300;
+color: #bbb;
+margin-bottom: 40px;
+opacity: 0;
+transform: translateY(20px);
+animation: fadeUp 1s ease 1s forwards;
+}
+.btn {
+display: inline-block;
+padding: 18px 45px;
+font-size: 1rem;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: 2px;
+background: transparent;
+color: #fff;
+border: 2px solid var(--accent-color);
+border-radius: 0;
+position: relative;
+overflow: hidden;
+transition: 0.3s;
+opacity: 0;
+transform: translateY(20px);
+animation: fadeUp 1s ease 1.2s forwards;
+}
+.btn::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 0;
+height: 100%;
+background: var(--accent-color);
+transition: width 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+z-index: -1;
+}
+.btn:hover::before {
+width: 100%;
+}
+.btn:hover {
+box-shadow: 0 0 30px var(--accent-glow);
+color: #fff;
+}
+section {
+padding: 120px 50px;
+}
+.section-header {
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-bottom: 80px;
+}
+.section-title {
+font-size: 4rem;
+font-weight: 900;
+text-transform: uppercase;
+color: #fff;
+position: relative;
+}
+.section-title span {
+color: transparent;
+-webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+position: absolute;
+top: -50%;
+left: 50%;
+transform: translateX(-50%);
+font-size: 6rem;
+z-index: -1;
+white-space: nowrap;
+}
+.about {
+background-color: var(--bg-color);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 80px;
+}
+.about-text {
+flex: 1;
+max-width: 600px;
+}
+.about-text h2 {
+font-size: 2.8rem;
+font-weight: 800;
+margin-bottom: 30px;
+line-height: 1.2;
+}
+.about-text p {
+font-size: 1.1rem;
+color: #aaa;
+line-height: 1.8;
+margin-bottom: 20px;
+}
+.about-img-container {
+flex: 1;
+position: relative;
+}
+.about-img {
+width: 100%;
+height: 600px;
+object-fit: cover;
+border-radius: 10px;
+filter: grayscale(100%);
+transition: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.about-img-container:hover .about-img {
+filter: grayscale(0%);
+transform: scale(1.02);
+box-shadow: 0 20px 50px rgba(255, 42, 63, 0.2);
+}
+.floating-badge {
+position: absolute;
+bottom: -30px;
+right: -30px;
+background: var(--accent-color);
+width: 150px;
+height: 150px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+font-weight: 800;
+font-size: 1.2rem;
+animation: float 4s ease-in-out infinite;
+box-shadow: 0 0 30px var(--accent-glow);
+}
+.services {
+background-color: var(--section-bg);
+}
+.services-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+gap: 40px;
+}
+.tilt-card {
+background: var(--card-bg);
+padding: 50px 40px;
+border-radius: 15px;
+border: 1px solid rgba(255,255,255,0.05);
+transform-style: preserve-3d;
+transform: perspective(1000px);
+transition: border-color 0.3s;
+}
+.tilt-card:hover {
+border-color: var(--accent-color);
+}
+.card-content {
+transform: translateZ(30px);
+}
+.service-icon {
+font-size: 3rem;
+color: var(--accent-color);
+margin-bottom: 25px;
+display: inline-block;
+font-weight: 900;
+text-shadow: 0 0 20px var(--accent-glow);
+}
+.tilt-card h3 {
+font-size: 1.8rem;
+font-weight: 700;
+margin-bottom: 20px;
+}
+.tilt-card p {
+color: #888;
+line-height: 1.7;
+}
+.gallery {
+background-color: var(--bg-color);
+padding: 120px 0;
+}
+.marquee {
+width: 100%;
+overflow: hidden;
+white-space: nowrap;
+background: var(--accent-color);
+padding: 20px 0;
+margin-bottom: 60px;
+transform: rotate(-2deg) scale(1.05);
+}
+.marquee-content {
+display: inline-block;
+animation: marquee 20s linear infinite;
+font-size: 2rem;
+font-weight: 900;
+text-transform: uppercase;
+letter-spacing: 5px;
+color: #000;
+}
+.marquee-content span {
+margin: 0 30px;
+}
+.gallery-grid {
+display: flex;
+gap: 20px;
+padding: 0 50px;
+overflow-x: auto;
+scrollbar-width: none;
+}
+.gallery-grid::-webkit-scrollbar {
+display: none;
+}
+.gallery-item {
+min-width: 400px;
+height: 500px;
+position: relative;
+border-radius: 10px;
+overflow: hidden;
+flex-shrink: 0;
+}
+.gallery-item img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), filter 0.7s;
+filter: brightness(0.5);
+}
+.gallery-item:hover img {
+transform: scale(1.1);
+filter: brightness(1);
+}
+.gallery-info {
+position: absolute;
+bottom: -100px;
+left: 0;
+width: 100%;
+padding: 30px;
+background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+transition: bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.gallery-item:hover .gallery-info {
+bottom: 0;
+}
+.gallery-info h4 {
+font-size: 1.5rem;
+font-weight: 800;
+text-transform: uppercase;
+color: var(--accent-color);
+}
+.pricing {
+background-color: var(--section-bg);
+}
+.pricing-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 40px;
+max-width: 1200px;
+margin: 0 auto;
+}
+.price-card {
+background: var(--card-bg);
+padding: 60px 40px;
+border-radius: 20px;
+text-align: center;
+position: relative;
+overflow: hidden;
+border: 1px solid rgba(255,255,255,0.05);
+transform-style: preserve-3d;
+}
+.price-card.featured {
+background: linear-gradient(145deg, var(--card-bg), #1a0505);
+border: 1px solid var(--accent-color);
+transform: scale(1.05);
+}
+.price-card.featured::after {
+content: 'RECOMENDADO';
+position: absolute;
+top: 20px;
+right: -35px;
+background: var(--accent-color);
+color: #fff;
+font-size: 0.7rem;
+font-weight: 800;
+padding: 5px 40px;
+transform: rotate(45deg);
+letter-spacing: 1px;
+}
+.price-content {
+transform: translateZ(40px);
+}
+.price-card h3 {
+font-size: 1.5rem;
+text-transform: uppercase;
+letter-spacing: 2px;
+margin-bottom: 20px;
+color: #aaa;
+}
+.price-card.featured h3 {
+color: var(--accent-color);
+}
+.price {
+font-size: 4rem;
+font-weight: 900;
+color: #fff;
+margin-bottom: 30px;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+}
+.price span {
+font-size: 1.2rem;
+font-weight: 500;
+color: #666;
+margin-top: 15px;
+}
+.features {
+list-style: none;
+margin-bottom: 40px;
+text-align: left;
+}
+.features li {
+margin-bottom: 15px;
+color: #ccc;
+font-weight: 300;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.features li::before {
+content: '';
+display: inline-block;
+width: 8px;
+height: 8px;
+background: var(--accent-color);
+border-radius: 50%;
+}
+footer {
+background: #000;
+padding: 80px 50px 30px;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
+.footer-content {
+display: flex;
+flex-direction: column;
+align-items: center;
+z-index: 1;
+position: relative;
+}
+.footer-logo {
+font-size: 3rem;
+font-weight: 900;
+text-transform: uppercase;
+letter-spacing: 5px;
+margin-bottom: 20px;
+}
+.footer-logo span {
+color: var(--accent-color);
+}
+.footer-text {
+color: #555;
+font-weight: 300;
+max-width: 400px;
+margin-bottom: 40px;
+}
+.footer-bottom {
+width: 100%;
+border-top: 1px solid rgba(255,255,255,0.1);
+padding-top: 30px;
+display: flex;
+justify-content: space-between;
+color: #444;
+font-size: 0.9rem;
+}
+.bg-text {
+position: absolute;
+bottom: -50px;
+left: 50%;
+transform: translateX(-50%);
+font-size: 15vw;
+font-weight: 900;
+color: rgba(255,255,255,0.02);
+white-space: nowrap;
+z-index: 0;
+pointer-events: none;
+}
+.reveal {
+opacity: 0;
+transform: translateY(50px);
+transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+}
+.reveal.active {
+opacity: 1;
+transform: translateY(0);
+}
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+@keyframes revealUp {
+from { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); }
+to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+}
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+0% { transform: translateY(0); }
+50% { transform: translateY(-20px); }
+100% { transform: translateY(0); }
+}
+@keyframes marquee {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+@media (max-width: 992px) {
+.about { flex-direction: column; text-align: center; }
+.about-text h2 { font-size: 2.2rem; }
+.floating-badge { right: 50%; transform: translateX(50%); bottom: -50px; }
+.section-title { font-size: 2.5rem; }
+.section-title span { font-size: 4rem; }
+.transition-text { font-size: 3rem; }
+}
+@media (max-width: 768px) {
+header { padding: 20px; flex-direction: column; gap: 15px; }
+.nav-links { gap: 20px; flex-wrap: wrap; justify-content: center; }
+.hero-content h1 { font-size: 3rem; }
+.gallery-grid { padding: 0 20px; }
+.gallery-item { min-width: 300px; height: 400px; }
+.price-card.featured { transform: scale(1); }
+section { padding: 80px 20px; }
+.cursor-dot, .cursor-outline { display: none; }
+* { cursor: auto; }
+}
+</style>
+</head>
+<body>
+
+<div class="transition-overlay">
+<div class="transition-text">TITANIUM</div>
+</div>
+
+<div class="cursor-dot"></div>
+<div class="cursor-outline"></div>
+
+<header id="navbar">
+<div class="logo">TITAN<span>IUM</span></div>
+<nav class="nav-links">
+<a href="#inicio" data-text="INICIO"><span>INICIO</span></a>
+<a href="#nosotros" data-text="NOSOTROS"><span>NOSOTROS</span></a>
+<a href="#servicios" data-text="SERVICIOS"><span>SERVICIOS</span></a>
+<a href="#galeria" data-text="GALERIA"><span>GALERIA</span></a>
+<a href="#planes" data-text="PLANES"><span>PLANES</span></a>
+</nav>
+</header>
+
+<section class="hero" id="inicio">
+<div class="hero-bg" id="hero-bg"></div>
+<div class="hero-content">
+<h1>FORJA TU <span>LEGADO</span></h1>
+<p>La evolucion de tu cuerpo y mente comienza aqui. Instalaciones de nivel mundial, entrenadores de elite.</p>
+<a href="#planes" class="btn transition-link">COMENZAR AHORA</a>
+</div>
+</section>
+
+<section class="about" id="nosotros">
+<div class="about-text reveal">
+<h2>NO ES SOLO UN GIMNASIO, ES UNA REVOLUCION</h2>
+<p>Dejamos atras los metodos tradicionales. En Titanium fusionamos biomecanica avanzada, tecnologia deportiva y motivacion pura para garantizar resultados reales.</p>
+<p>Nuestro espacio de mas de 2000m2 en Cocula esta diseñado arquitectonicamente para potenciar tu energia desde el momento en que cruzas la puerta.</p>
+<a href="#servicios" class="btn transition-link" style="margin-top: 20px;">DESCUBRIR MAS</a>
+</div>
+<div class="about-img-container reveal stagger-2">
+<img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1920&auto=format&fit=crop" alt="Gym Interior" class="about-img">
+<div class="floating-badge">ENTRENA<br>COMO<br>TITAN</div>
+</div>
+</section>
+
+<section class="services" id="servicios">
+<div class="section-header reveal">
+<h2 class="section-title">SERVICIOS <span>DISCIPLINA</span></h2>
+</div>
+<div class="services-grid">
+<div class="tilt-card reveal stagger-1">
+<div class="card-content">
+<div class="service-icon">HIIT</div>
+<h3>ALTA INTENSIDAD</h3>
+<p>Zonas especificas equipadas con asalto, remos y kettlebells. Circuitos diseñados para quemar calorias al maximo nivel.</p>
+</div>
+</div>
+<div class="tilt-card reveal stagger-2">
+<div class="card-content">
+<div class="service-icon">STR</div>
+<h3>FUERZA PURA</h3>
+<p>Racks de competicion, plataformas de levantamiento olimpico y discos calibrados para quienes buscan romper sus RMs.</p>
+</div>
+</div>
+<div class="tilt-card reveal stagger-3">
+<div class="card-content">
+<div class="service-icon">REC</div>
+<h3>RECUPERACION</h3>
+<p>Pistolas de masaje, rodillos de espuma y zonas de estiramiento. Un musculo bien recuperado es un musculo mas fuerte.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="gallery" id="galeria">
+<div class="marquee">
+<div class="marquee-content">
+<span>NO PAIN NO GAIN</span> • <span>BEYOND YOUR LIMITS</span> • <span>TITANIUM FITNESS</span> • <span>NO PAIN NO GAIN</span> • <span>BEYOND YOUR LIMITS</span> • <span>TITANIUM FITNESS</span>
+</div>
+</div>
+<div class="gallery-grid reveal">
+<div class="gallery-item">
+<img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=800&auto=format&fit=crop" alt="Pesas Libres">
+<div class="gallery-info">
+<h4>PESO LIBRE</h4>
+</div>
+</div>
+<div class="gallery-item">
+<img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=800&auto=format&fit=crop" alt="Maquinas">
+<div class="gallery-info">
+<h4>MAQUINARIA BIO</h4>
+</div>
+</div>
+<div class="gallery-item">
+<img src="https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=800&auto=format&fit=crop" alt="Cardio">
+<div class="gallery-info">
+<h4>CARDIO ZONE</h4>
+</div>
+</div>
+<div class="gallery-item">
+<img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=800&auto=format&fit=crop" alt="Crossfit">
+<div class="gallery-info">
+<h4>CROSS TRAINING</h4>
+</div>
+</div>
+</div>
+</section>
+
+<section class="pricing" id="planes">
+<div class="section-header reveal">
+<h2 class="section-title">MEMBRESIAS <span>TU PASE</span></h2>
+</div>
+<div class="pricing-grid">
+<div class="price-card tilt-card reveal stagger-1">
+<div class="price-content">
+<h3>IRON</h3>
+<div class="price">$499<span>/MXN</span></div>
+<ul class="features">
+<li>Acceso zona de musculacion</li>
+<li>Area de cardio ilimitada</li>
+<li>Uso de vestidores y regaderas</li>
+<li>App de seguimiento basico</li>
+</ul>
+<a href="#" class="btn" style="width: 100%; margin-top: 20px;">SELECCIONAR</a>
+</div>
+</div>
+<div class="price-card tilt-card featured reveal stagger-2">
+<div class="price-content">
+<h3>TITANIUM</h3>
+<div class="price">$799<span>/MXN</span></div>
+<ul class="features">
+<li>Todo lo de Iron</li>
+<li>Clases grupales funcionales</li>
+<li>Evaluacion InBody mensual</li>
+<li>Rutina personalizada digital</li>
+<li>Acceso multilocal</li>
+</ul>
+<a href="#" class="btn" style="width: 100%; margin-top: 20px;">SELECCIONAR</a>
+</div>
+</div>
+<div class="price-card tilt-card reveal stagger-3">
+<div class="price-content">
+<h3>ELITE VIP</h3>
+<div class="price">$1499<span>/MXN</span></div>
+<ul class="features">
+<li>Todo lo de Titanium</li>
+<li>4 sesiones Personal Trainer/mes</li>
+<li>Asesoria Nutricional</li>
+<li>Toalla y locker asignado</li>
+</ul>
+<a href="#" class="btn" style="width: 100%; margin-top: 20px;">SELECCIONAR</a>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="bg-text">TITANIUM</div>
+<div class="footer-content">
+<div class="footer-logo">TITAN<span>IUM</span></div>
+<p class="footer-text">El unico mal entrenamiento es el que no se hizo. Unete a la comunidad mas fuerte de Cocula, Jalisco.</p>
+</div>
+<div class="footer-bottom">
+<span>&copy; 2026 Titanium Fitness. Todos los derechos reservados.</span>
+<span>Cocula, Jalisco, Mexico.</span>
+</div>
+</footer>
+
+<script>
+const cursorDot = document.querySelector('.cursor-dot');
+const cursorOutline = document.querySelector('.cursor-outline');
+
+window.addEventListener('mousemove', (e) => {
+const posX = e.clientX;
+const posY = e.clientY;
+cursorDot.style.left = `${posX}px`;
+cursorDot.style.top = `${posY}px`;
+cursorOutline.style.transform = `translate(${posX - 20}px, ${posY - 20}px)`;
+});
+
+const interactables = document.querySelectorAll('a, .btn, .tilt-card, .gallery-item');
+interactables.forEach(item => {
+item.addEventListener('mouseenter', () => {
+cursorOutline.style.width = '60px';
+cursorOutline.style.height = '60px';
+cursorOutline.style.background = 'rgba(255, 42, 63, 0.1)';
+});
+item.addEventListener('mouseleave', () => {
+cursorOutline.style.width = '40px';
+cursorOutline.style.height = '40px';
+cursorOutline.style.background = 'transparent';
+});
+});
+
+const transitionOverlay = document.querySelector('.transition-overlay');
+const transitionText = document.querySelector('.transition-text');
+const navLinks = document.querySelectorAll('.nav-links a, .transition-link');
+
+navLinks.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+if(!targetId || targetId === '#') return;
+const targetSection = document.querySelector(targetId);
+const sectionName = this.getAttribute('data-text') || 'TITANIUM';
+
+transitionText.textContent = sectionName;
+transitionOverlay.classList.remove('active-out');
+transitionOverlay.classList.add('active-in');
+
+setTimeout(() => {
+window.scrollTo({
+top: targetSection.offsetTop,
+behavior: 'auto'
+});
+reveal();
+}, 600);
+
+setTimeout(() => {
+transitionOverlay.classList.remove('active-in');
+transitionOverlay.classList.add('active-out');
+}, 1000);
+});
+});
+
+let lastScroll = 0;
+const navbar = document.getElementById('navbar');
+
+window.addEventListener('scroll', () => {
+const currentScroll = window.pageYOffset;
+if (currentScroll > 100) {
+navbar.style.background = 'rgba(5, 5, 5, 0.95)';
+navbar.style.backdropFilter = 'blur(10px)';
+navbar.style.padding = '15px 50px';
+} else {
+navbar.style.background = 'transparent';
+navbar.style.backdropFilter = 'none';
+navbar.style.padding = '25px 50px';
+}
+if (currentScroll > lastScroll && currentScroll > 300) {
+navbar.style.transform = 'translateY(-100%)';
+} else {
+navbar.style.transform = 'translateY(0)';
+}
+lastScroll = currentScroll;
+});
+
+const heroBg = document.getElementById('hero-bg');
+window.addEventListener('scroll', () => {
+const scroll = window.pageYOffset;
+heroBg.style.transform = `translateY(${scroll * 0.4}px)`;
+});
+
+const tiltCards = document.querySelectorAll('.tilt-card');
+tiltCards.forEach(card => {
+card.addEventListener('mousemove', e => {
+const rect = card.getBoundingClientRect();
+const x = e.clientX - rect.left;
+const y = e.clientY - rect.top;
+const centerX = rect.width / 2;
+const centerY = rect.height / 2;
+const rotateX = ((y - centerY) / centerY) * -10;
+const rotateY = ((x - centerX) / centerX) * 10;
+card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+});
+card.addEventListener('mouseleave', () => {
+card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+});
+});
+
+function reveal() {
+const reveals = document.querySelectorAll('.reveal');
+for (let i = 0; i < reveals.length; i++) {
+const windowHeight = window.innerHeight;
+const elementTop = reveals[i].getBoundingClientRect().top;
+const elementVisible = 100;
+if (elementTop < windowHeight - elementVisible) {
+reveals[i].classList.add('active');
+}
+}
+}
+window.addEventListener('scroll', reveal);
+reveal();
+</script>
+</body>
+</html>
